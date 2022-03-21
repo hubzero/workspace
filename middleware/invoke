@@ -1,0 +1,41 @@
+#!/bin/bash
+
+toolbase=$(dirname $(readlink -f $(dirname $0)))
+
+SHELL=$(getent passwd $(whoami) | cut -d: -f7)
+export SHELL
+
+[[ -x ${HOME}/.xinitrc ]] && exec ${HOME}/.xinitrc
+[[ -x ${HOME}/.Xsession ]] && exec ${HOME}/.Xsession
+
+#
+# I like there to be scrollbars and be login shells.
+#
+echo "XTerm*scrollBar: true
+XTerm*loginShell: true
+" | xrdb -merge
+
+[[ -e ${HOME}/.Xdefaults ]] && xrdb -merge ${HOME}/.Xdefaults
+
+#
+# Start an initial xterm.
+#
+xterm -class UXTerm -u8 -ls -sb -title uxterm &
+
+#
+# Run HUB workspace customization scripts
+#
+
+CUSTOMDIR=${toolbase}/middleware/custom
+
+if [ -d ${CUSTOMDIR} ] ; then
+   for i in $(ls ${CUSTOMDIR} 2> /dev/null) ; do
+      if [[ -x ${CUSTOMDIR}/$i ]] ; then
+         ${CUSTOMDIR}/$i
+      fi
+   done
+fi
+
+# launch hubzero's icewm
+
+/usr/bin/icewm-hubzero
