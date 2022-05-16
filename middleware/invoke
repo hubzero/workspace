@@ -11,8 +11,8 @@ export SHELL
 #
 # I like there to be scrollbars and be login shells.
 #
-echo "XTerm*scrollBar: true
-XTerm*loginShell: true
+echo "UXTerm*scrollBar: true
+UXTerm*loginShell: true
 " | xrdb -merge
 
 [[ -e ${HOME}/.Xdefaults ]] && xrdb -merge ${HOME}/.Xdefaults
